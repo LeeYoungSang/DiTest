@@ -402,8 +402,7 @@
                   <input type="" title=" 등록" alt="등록" value="등록" class="btn btn_regist" onclick="addMember()">  
                   
                 </div>
-                <div class="b_w" id="ys"> 
-                
+                <div class="b_w" > 
                 </div>
               </fieldset>
             </form>  
@@ -415,27 +414,6 @@
     </div>
     <!--// contents -->
   </div>
-    
-    <script type="text/bable">
-	var commentBox = React.createClass({
-
-		render : function(){
-			return(
-			<div className ="commentBox">
-				Hello
-			</div>		    
-			);
-		}
-	});	
-
-	ReactDOM.render(
-		<CommentBox/>,
-		document.getElement('ys');
-	);
-
-	</script>
-    
-    
   <!-- footer -->
   <div id="footer" class="footer" > 
     <p class="c">Copyright ⓒ. All rights reserved.</p>
