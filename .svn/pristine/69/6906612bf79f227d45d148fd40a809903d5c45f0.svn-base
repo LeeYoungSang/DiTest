@@ -1,0 +1,95 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!doctype html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Naosoft</title>
+<link type="text/css" rel="stylesheet" href="common/css/default.css" />
+<script type="text/javascript" src="common/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="common/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="common/js/design.js"></script>
+
+<script>
+	function addMember() {
+		location.href = "addMemberForm.nao";
+	}
+</script>
+</head>
+
+<body>
+
+
+<!-- 스킵 네비게이션 -->
+<div class="skip_navi">
+    <a href="#contents">본문으로 가기</a>
+    <a href="#gnb">주메뉴로 가기</a>
+    <a href="#footer">카피라이트로 가기</a>
+</div>
+<!-- // 스킵 네비게이션 -->
+
+<!-- wrapper -->
+<div class="wrapper login">
+
+	<%@ include file="../common/header.jsp" %>
+    
+    <!-- contents -->
+    <div id="contents" class="contents">  
+      
+      <!-- article --> 
+      <div class="article">
+        
+        <div class="cnt cnt_login  ">
+          
+          <p class="login_txt"><em>서비스 이용을 위해서 로그인하여 주시기 바랍니다.</em></p>
+          <div class="login_box">
+            <form name="regiform" method="post" action="login.nao" id="regiform" onsubmit="return check_form( this )">
+              <fieldset class="login_form">
+                <legend class="blind">로그인</legend>
+                <div class="c_w fix">
+                  <p class="id_area">                    
+                    <input type="text" id="id" name="id" maxlength="41">
+                    <label for="id" id="">ID</label>
+                  </p>
+                  <p class="pw_area">                    
+                    <input type="password" id="pw" name="pw" maxlength="16" onkeypress="" onkeyup="" onkeydown="">
+                    <label for="pw" id="label_pw_area">Password</label>
+                  </p>                  
+                </div>
+<!--                 
+                <label for="agree01" class="ch">
+                  <input type="checkbox" name="sd1" id="agree01"><span>아이디 저장</span>
+                </label>
+ -->                
+                <div class="b_w">
+                  <input type="submit" title="로그인" alt="로그인" value="로그인" class="btn" onclick="">
+                  <input type="" title=" 등록" alt="등록" value="등록" class="btn btn_regist" onclick="addMember()">  
+                </div>
+              </fieldset>
+            </form>  
+          </div>
+      </div>
+      <!--// article --> 
+    
+    	   
+    </div>
+    <!--// contents -->
+  </div>
+    
+  <!-- footer -->
+  <div id="footer" class="footer" > 
+    <p class="c">Copyright ⓒ. All rights reserved.</p>
+
+  </div>
+  <!--// footer -->   
+
+</div>
+<!--// wrapper -->
+
+</body>
+</html>

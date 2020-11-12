@@ -1,0 +1,93 @@
+@charset "UTF-8"; 
+
+/*
+ * Centum Cascading Style Sheets
+ * http: //www.ctit.co.kr
+ *
+ * Copyright (C) 2019 ctit.co.kr
+ * Author : han
+ */
+
+
+/* reset */
+* {margin: 0; padding: 0; border: 0; -webkit-text-size-adjust: none; -moz-text-size-adjust: none; -ms-text-size-adjust: none;}
+html, body {width: 100%; height: 100%; margin: 0; padding: 0; font-family: 'Noto Sans KR', 'vNanum Gothic', Nanum Gothic, '나눔고딕', '맑은 고딕', 'Malgun Gothic', Dotum, '돋움', Gulim, '굴림',sans-serif; -webkit-text-size-adjust: none; -moz-text-size-adjust: none; -ms-text-size-adjust: none;}
+body {font-size:17px; line-height:1.1; font-weight:400; color: #333; letter-spacing: -0.5px; word-break: keep-all; -ms-word-break: keep-all;}
+a, address, blockquote, br, fieldset, legend, label, form, input, select, textarea, button, table, th, td caption, cite, code, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, div, iframe, ul, ol, li, hr, img {margin: 0; padding: 0;}
+h1, h2, h3, h4, h5, h6 {color:#000; font-weight:normal;}
+ul, ol, li {list-style: none;}
+abbr,acronym {border: 0;}
+img {vertical-align: middle; border: none;}
+img, fieldset, iframe {border: none;}
+em, address {font-style: normal;}
+textarea {overflow: auto;}
+table {border-collapse: collapse; border-spacing: 0;}
+input, select, textarea {font-size: 100%; vertical-align: middle;}
+
+/* hyper link */
+a,
+a:link,
+a:visited {text-decoration: none; color: inherit;}
+a:active,
+a:hover {text-decoration: none; color: inherit;}
+
+/* hr , legend , caption */
+hr, legend, caption {clear: both; display: none; list-style: none; position: absolute; top: 0; left: 0; width: 0; height: 0; margin: 0; padding: 0; border: 0; background: none; font-size: 0px; line-height: 0; visibility: hidden;}
+
+/* 입력 form */
+input{font-size: inherit; font-family: inherit; color: inherit; vertical-align: middle; box-sizing:border-box;}
+input[type="file"]{border:none}
+input[type="radio"],input[type="checkbox"]{border:none}
+button{text-transform: none; vertical-align: middle}
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {background-color:transparent; cursor: pointer; outline: none;}
+select{font-size: inherit; font-family: inherit; color: inherit;text-transform: none;vertical-align: middle; box-sizing:border-box;}
+textarea{width:100%;font-size: inherit; font-family: inherit; color: inherit; border:1px solid #dddddd ;vertical-align: middle; resize:none; box-sizing:border-box;}
+input[disabled="disabled"]{background-color:#ebebeb; color:#959595}
+select[disabled="disabled"]{background-color:#ebebeb; color:transparent}
+input[readonly] {color:#888;}
+
+/* hidden content */
+.skip {display:block; font-size: 1px;  width: 1px!important; height: 1px!important; line-height: 1px; overflow: hidden; position: absolute; left:-9999px!important; text-indent: -9999px; white-space: nowrap; overflow:hidden}
+
+/*
+.skip_navi { position:absolute; width:1px; height:1px; text-indent:-9999px; z-index:-1; overflow:hidden;}
+.skip_navi a{display:block; height:0px; }
+.skip_navi a:focus, 
+.skip_navi a:active{height:30px;}
+*/
+
+.skip_navi {width:100%; position:absolute; top:0; left:0; z-index:9990;}
+.skip_navi a{display:block; z-index:9999; overflow:hidden; text-align:center; color:#fff; height:0px;  background: #0c3b7b;}
+.skip_navi a:focus, 
+.sk_skip_navi a:active{height:30px;}
+
+.blind,
+.blind span {font-size: 1px; color: transparent; text-indent: -9999px;  }
+
+
+/* fix */
+.fix {*zoom: 1;}
+.fix:after {content: ""; clear: both; display: block;}
+
+/* lang exchange */
+.en {ime-mode:disabled;}
+.kr {ime-mode:active;}
+
+/* cursor */
+.hand {cursor: pointer;}
+
+/* txt_align */
+.center {text-align: center !important;}
+.left {text-align: left !important;}
+.right {text-align: right !important;}
+.justify {text-align: justify !important;}
+
+
+/* html5 */
+article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,section,summary {display: block;}
+:not(switch):before, :not(switch):after {display:none; content:'';}
+
+

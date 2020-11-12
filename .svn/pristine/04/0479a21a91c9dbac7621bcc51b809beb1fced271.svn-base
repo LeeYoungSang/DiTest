@@ -1,0 +1,61 @@
+package kr.co.nao.dao;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class CommonDAO {
+	public DataSource ds;
+	
+	public CommonDAO() {
+		try {
+			Context ct = new InitialContext();
+//			ds = (DataSource)ct.lookup("java:comp/env/oracle");
+			ds = (DataSource)ct.lookup("java:comp/env/jdbc/mysql");
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void close(Connection con) {
+		if(con != null) {
+			try {
+				con.close();
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void close(Statement stmt) {
+		if(stmt != null) {
+			try {
+				stmt.close();
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void close(ResultSet rs) {
+		if(rs != null) {
+			try {
+				rs.close();
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public int getStartNum(int pageNum) {
+		return ((pageNum - 1) * 10);
+	}
+}

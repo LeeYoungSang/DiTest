@@ -1,0 +1,56 @@
+package kr.co.nao.dao;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class StatisticsDAO extends CommonDAO {
+
+	public ArrayList<Map<String, Object>> getStatisticsList(String id) {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		String sql = 
+			"		select * from tb_schedule "
+			+ "	where		isDel = 'N' "
+			+ "	and				id = ? ";
+//			+ "	order by schedule_date desc, schedule_start_time desc "
+//			+ "	limit			?, 10 ";
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, id);
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, Object> ad = new HashMap<String, Object>();
+//				ad.put("num", 							rs.getInt("num"));
+//				ad.put("schedule_date", 			rs.getDate("schedule_date"));
+//				ad.put("schedule_start_time",	rs.getInt("schedule_start_time"));
+//				ad.put("machine_num", 			rs.getString("machine_num"));
+//				ad.put("contents_num", 			rs.getInt("contents_num"));
+				
+				list.add(ad);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(rs);
+			close(stmt);
+			close(con);
+		}
+		
+		return list;
+	}
+}

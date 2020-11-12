@@ -1,0 +1,253 @@
+package kr.co.nao.command.statistics;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.tools.Tool;
+
+import kr.co.nao.common.ActionForward;
+import kr.co.nao.common.Command;
+import kr.co.nao.dao.AdvertiserDAO;
+import kr.co.nao.dao.StatisticsDAO;
+
+/**
+ * 통계 목록
+ * 
+ * @author	이영상
+ * @since		2020.08.19
+ * @version	1.0
+ * 
+ * <pre>
+ * << 개정이력 >>
+ * ------------------------------------------------------
+ * 수정일				수정자				수정내용
+ * ------------------------------------------------------
+ * 08.19			이영상				최초생성
+ */
+
+
+
+
+public class StatisticsListCommand implements Command {
+
+	@Override
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		Map<String, Object> member = (Map<String, Object>)session.getAttribute("member");
+		
+		ActionForward action = new ActionForward();
+		
+		//검색 조건 구분 값
+		String type = "";
+		
+		//광고종류
+		String selADT = "";
+		
+		//광고종류
+		String selAdKind = "";
+		
+		//머신
+		String selMc = "";
+		
+		//통계리스트 
+		ArrayList<Map<String, Object>> stList = null;
+		
+		//parameterList
+		ArrayList<Map<String, Object>> paramList = new ArrayList<Map<String, Object>>();
+		
+		if(member == null) 
+		{
+			action.setRedirect(true);
+			action.setPath("loginForm.nao");
+		}
+		else 
+		{
+			int pageNum = 1;
+			
+			if(request.getParameter("pn") != null) 
+			{
+				pageNum = Integer.parseInt(request.getParameter("pn"));
+			}
+			
+			StatisticsDAO dao = new StatisticsDAO();
+			
+			////////////////////////
+			//1.검색타입체크		  //
+			//일일: day			  //
+			//월별: month 		  //
+			//기간별: period		  //
+			////////////////////////
+			if(request.getParameter("searchType") == null) 
+			{
+				type = "";
+			}
+			else 
+			{
+				type = request.getParameter("searchType");
+			}
+			
+			if(request.getParameter("selADT") == null) 
+			{
+				selADT = "";
+			}
+			else 
+			{
+				selADT = request.getParameter("selADT");
+			}
+			
+			System.err.println("StatisticsListCommand 검색타입:"+type);
+			
+			String preDate  = request.getParameter("preDate");		//시작일자
+			String postDate = request.getParameter("postDate"); 	//종료일자
+			String preDateM  = request.getParameter("preDateM");	//월별시작일자
+			
+			selADT    = request.getParameter("selADT");				//광고주
+			selAdKind = request.getParameter("selAdKind");		    //광고종류
+			selMc     = request.getParameter("selMc");				//머신
+			
+			
+			System.out.println("StatisticsListCommand preDate:"+preDate);
+			System.out.println("StatisticsListCommand postDate:"+postDate);
+			System.out.println("StatisticsListCommand preDateM:"+preDateM);
+			
+			System.out.println("StatisticsListCommand selADT:"+selADT);
+			System.out.println("StatisticsListCommand selAdKind:"+selAdKind);
+			System.out.println("StatisticsListCommand selMc:"+selMc);
+			
+			////////////////////////
+			//2.타입 별 로직 분기문으로 구분 //
+			//일일: day			  //
+			//월별: month 		  //
+			//기간별: period		  //
+			////////////////////////
+			
+			//초기화면 진입, 기간별 검색 시 날짜세팅
+			if("".equals(type) || "period".equals(type)) 
+			{
+				Date date = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				
+				if("".equals(request.getParameter("preDate")) || request.getParameter("preDate")==null) 
+				{
+					cal.add(Calendar.DAY_OF_WEEK, 0);
+					preDate = sdf.format(cal.getTime());
+					System.out.println("preDate:"+preDate);
+				}
+				
+				if("".equals(request.getParameter("postDate")) || request.getParameter("postDate")==null) 
+				{
+					cal.add(Calendar.DAY_OF_WEEK, 14);
+					postDate = sdf.format(cal.getTime());
+					System.out.println("preDate:"+postDate);
+				}
+				
+				if("".equals(request.getParameter("preDateM")) || request.getParameter("preDateM")==null) 
+				{
+					sdf = new SimpleDateFormat("yyyy-MM");
+					cal = Calendar.getInstance();
+					cal.setTime(date);
+					preDateM = sdf.format(cal.getTime());
+					preDateM = preDateM.substring(0, 7);
+					System.out.println("preDateM:"+preDateM);
+				}
+			}
+			
+			if("day".equals(type)) 
+			{
+
+				Map<String, Object> param = new HashMap<String, Object>();
+				
+				param.put("pn", pageNum);							    //페이지번호
+				param.put("id", (String)member.get("id"));  		    //Login ID
+				param.put("division", (String)member.get("division"));  //division
+				param.put("preDate", preDate);					 	    //검색 시작일자
+				param.put("type", type );						 	    //통계종류
+				param.put("selADT", selADT );					    	//광고주
+				param.put("selAdKind", selAdKind );					    //광고종류
+				param.put("selMc", selMc );							    //머신
+				
+				paramList.add(param);
+				
+				//일일 통계 리스트
+				stList = dao.getStatisticsDayList(paramList);
+			}
+			
+			if("month".equals(type)) 
+			{
+				Map<String, Object> param = new HashMap<String, Object>();
+				
+				param.put("pn", pageNum);							    //페이지번호
+				param.put("id", (String)member.get("id"));  		    //Login ID
+				param.put("division", (String)member.get("division"));  //division
+				param.put("preDateM", preDateM);					 	//검색  월별
+				param.put("type", type );						 	    //통계종류
+				param.put("selADT", selADT );					    	//광고주
+				param.put("selAdKind", selAdKind );					    //광고종류
+				param.put("selMc", selMc );							    //머신
+				
+				paramList.add(param);
+				
+				//월별 통계 리스트
+				stList = dao.getStatisticsMonthList(paramList);
+			}
+			
+			if("period".equals(type)) 
+			{
+				Map<String, Object> param = new HashMap<String, Object>();
+				
+				param.put("pn", pageNum);							    //페이지번호
+				param.put("id", (String)member.get("id"));  		    //Login ID
+				param.put("division", (String)member.get("division"));  //division
+				param.put("preDate", preDate);					 	    //검색 시작일자
+				param.put("postDate", postDate);					 	//검색 종료일자
+				param.put("selADT", selADT );					    	//광고주
+				param.put("selAdKind", selAdKind );					    //광고종류
+				param.put("selMc", selMc );							    //머신
+				
+				paramList.add(param);
+				
+				//기간별 통계 리스트
+				//stList = dao.getStatisticsPeriodDList(paramList);
+				stList = dao.getStatisticsPeriodMList(paramList);
+			}
+			
+			
+			// 게시물의 총 갯수
+//			int totalRow = dao.getTotalRow();
+			int totalRow = 25;
+			
+			//select 태그세팅
+			request.setAttribute("type", type);
+			request.setAttribute("selADT", selADT);
+			request.setAttribute("selAdKind", selAdKind);
+			request.setAttribute("selMc", selMc);
+			
+			//날짜세팅
+			request.setAttribute("preDate",preDate );
+			request.setAttribute("postDate",postDate );
+			request.setAttribute("preDateM",preDateM );
+			
+			//list목록
+			request.setAttribute("stList", stList);
+			
+			//paging 목록
+			request.setAttribute("pn", pageNum);
+			
+			request.setAttribute("totalRow", totalRow);
+			action.setRedirect(false);
+			action.setPath("WEB-INF/statistics/statisticsTestList.jsp");
+		}
+		
+		return action;
+	}
+}

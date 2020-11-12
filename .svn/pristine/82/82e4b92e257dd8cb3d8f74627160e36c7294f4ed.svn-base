@@ -1,0 +1,146 @@
+package kr.co.nao.mapping;
+
+import java.util.HashMap;
+
+import kr.co.nao.common.Command;
+
+/**
+ * 광고 플랫폼 URL mapping
+ * @author	김관형
+ * @since		2019.11.18
+ * @version	1.0
+ * 
+ * <pre>
+ * << 개정이력 >>
+ * ------------------------------------------------------
+ * 수정일				수정자				수정내용
+ * ------------------------------------------------------
+ */
+
+public class CommandFactory {
+	private HashMap<String, String> map = new HashMap<String, String>();
+	private static CommandFactory factory = new CommandFactory();
+	
+	private CommandFactory() {
+		// --------- 로그인/로그아웃 ------------
+		map.put("/DiClean/loginForm.nao", 								"kr.co.nao.command.member.LoginFormCommand");
+		map.put("/DiClean/login.nao", 											"kr.co.nao.command.member.LoginCommand");
+		map.put("/DiClean/logout.nao", 										"kr.co.nao.command.member.LogoutCommand");
+
+		// --------- 회원관리 ------------
+		map.put("/DiClean/addMemberForm.nao", 				"kr.co.nao.command.member.AddMemberFormCommand");
+		map.put("/DiClean/idDupsCheckForm.nao",	 			"kr.co.nao.command.member.IdDupsCheckFormCommand");
+		map.put("/DiClean/idDupsCheck.nao",	 						"kr.co.nao.command.member.IdDupsCheckCommand");
+		map.put("/DiClean/addMember.nao", 							"kr.co.nao.command.member.AddMemberCommand");
+		map.put("/DiClean/updateMemberForm.nao", 			"kr.co.nao.command.member.UpdateMemberFormCommand");
+		map.put("/DiClean/updateMember.nao", 					"kr.co.nao.command.member.UpdateMemberCommand");
+		map.put("/DiClean/deleteMember.nao", 						"kr.co.nao.command.member.DeleteMemberCommand");
+
+		// --------- 머신관리 ------------
+		map.put("/DiClean/machineList.nao", 							"kr.co.nao.command.machine.MachineListCommand");
+		map.put("/DiClean/addMachineForm.nao", 				"kr.co.nao.command.machine.AddMachineFormCommand");
+		map.put("/DiClean/addMachine.nao", 							"kr.co.nao.command.machine.AddMachineCommand");
+		map.put("/DiClean/updateMachineForm.nao", 			"kr.co.nao.command.machine.UpdateMachineFormCommand");
+		map.put("/DiClean/updateMachine.nao", 					"kr.co.nao.command.machine.UpdateMachineCommand");
+		map.put("/DiClean/deleteMachine.nao", 						"kr.co.nao.command.machine.DeleteMachineCommand");
+		map.put("/DiClean/machineMap.nao", 						"kr.co.nao.command.machine.MachineMapCommand");
+		
+		
+		// --------- 공지사항 ------------
+		map.put("/DiClean/noticeList.nao", 								"kr.co.nao.command.notice.NoticeListCommand");
+		map.put("/DiClean/noticeDetail.nao", 							"kr.co.nao.command.notice.NoticeDetailCommand");
+		map.put("/DiClean/addNoticeForm.nao", 					"kr.co.nao.command.notice.AddNoticeFormCommand");
+		map.put("/DiClean/addNotice.nao", 								"kr.co.nao.command.notice.AddNoticeCommand");
+		map.put("/DiClean/hitUpdate.nao", 								"kr.co.nao.command.notice.HitUpdateCommand");
+		map.put("/DiClean/updateNoticeForm.nao", 				"kr.co.nao.command.notice.UpdateNoticeFormCommand");
+		map.put("/DiClean/updateNotice.nao", 						"kr.co.nao.command.notice.UpdateNoticeCommand");
+		map.put("/DiClean/deleteNotice.nao", 							"kr.co.nao.command.notice.DeleteNoticeCommand");
+		
+		// --------- 파일 관리 ------------
+		map.put("/DiClean/fileList.nao", 										"kr.co.nao.command.file.FileListCommand");
+		map.put("/DiClean/addFileForm.nao", 							"kr.co.nao.command.file.AddFileFormCommand");
+		map.put("/DiClean/addFile.nao", 									"kr.co.nao.command.file.AddFileCommand");
+		map.put("/DiClean/updateFileForm.nao", 					"kr.co.nao.command.file.UpdateFileFormCommand");
+		map.put("/DiClean/updateFile.nao", 								"kr.co.nao.command.file.UpdateFileCommand");
+		map.put("/DiClean/deleteFile.nao", 								"kr.co.nao.command.file.DeleteFileCommand");
+
+		// --------- 컨텐츠 관리 ------------
+		map.put("/DiClean/contentsList.nao", 							"kr.co.nao.command.contents.ContentsListCommand");
+		map.put("/DiClean/addContentsForm.nao", 				"kr.co.nao.command.contents.AddContentsFormCommand");
+		map.put("/DiClean/searchFile.nao",								"kr.co.nao.command.contents.SearchFileCommand");
+		map.put("/DiClean/addContents.nao", 							"kr.co.nao.command.contents.AddContentsCommand");
+		map.put("/DiClean/updateContentsForm.nao",			"kr.co.nao.command.contents.UpdateContentsFormCommand");
+		map.put("/DiClean/updateContents.nao", 					"kr.co.nao.command.contents.UpdateContentsCommand");
+		map.put("/DiClean/deleteContents.nao", 						"kr.co.nao.command.contents.DeleteContentsCommand");
+		
+		// --------- 스케줄 관리 ------------
+		map.put("/DiClean/scheduleList.nao", 							"kr.co.nao.command.schedule.ScheduleListCommand");
+		map.put("/DiClean/addScheduleForm.nao", 				"kr.co.nao.command.schedule.AddScheduleFormCommand");
+		map.put("/DiClean/addScheduleSimpleForm.nao",	"kr.co.nao.command.schedule.AddScheduleSimpleFormCommand");
+		map.put("/DiClean/searchMachine.nao", 						"kr.co.nao.command.schedule.SearchMachineCommand");
+		map.put("/DiClean/searchContents.nao", 					"kr.co.nao.command.schedule.SearchContentsCommand");
+		map.put("/DiClean/searchTime.nao", 							"kr.co.nao.command.schedule.SearchTimeCommand");
+		map.put("/DiClean/selectSchedule.nao", 						"kr.co.nao.command.schedule.SelectScheduleCommand");
+		map.put("/DiClean/addSchedule.nao", 							"kr.co.nao.command.schedule.AddScheduleCommand");
+		map.put("/DiClean/updateScheduleForm.nao",			"kr.co.nao.command.schedule.UpdateScheduleFormCommand");
+		map.put("/DiClean/updateSchedule.nao", 					"kr.co.nao.command.schedule.UpdateScheduleCommand");
+		map.put("/DiClean/deleteSchedule.nao", 						"kr.co.nao.command.schedule.DeleteScheduleCommand");
+		map.put("/DiClean/dupsSchedule.nao", 						"kr.co.nao.command.schedule.DupsScheduleCommand");
+
+		// --------- 스페셜 스케줄 관리 ------------
+		map.put("/DiClean/specialScheduleStatusList.nao", 				"kr.co.nao.command.specialSchedule.SpecialScheduleStatusListCommand");
+		map.put("/DiClean/specialScheduleListByMachine.nao", 	"kr.co.nao.command.specialSchedule.SpecialScheduleListByMachineCommand");
+		map.put("/DiClean/addSpecialScheduleForm.nao",				"kr.co.nao.command.specialSchedule.AddSpecialScheduleFormCommand");
+		map.put("/DiClean/searchContentsBySpecial.nao",				"kr.co.nao.command.specialSchedule.SearchContentsBySpecialCommand");
+		map.put("/DiClean/addSpecialSchedule.nao",							"kr.co.nao.command.specialSchedule.AddSpecialScheduleCommand");
+		map.put("/DiClean/deleteSpecialSchedule.nao",						"kr.co.nao.command.specialSchedule.DeleteSpecialScheduleCommand");
+				
+		// --------- 클라이언트 ------------
+		map.put("/DiClean/client.nao", 										"kr.co.nao.command.client.ClientCommand");
+		map.put("/DiClean/clientSpecialSchedule.nao",			"kr.co.nao.command.client.ClientSpecialScheduleCommand");
+		map.put("/DiClean/searchSchedule.nao", 					"kr.co.nao.command.client.SearchScheduleCommand");
+
+		// --------- Dash board ------------
+		map.put("/DiClean/dashboard.nao", 								"kr.co.nao.command.dashboard.DashBoardCommand");
+		
+		// --------- 광고주 관리 ------------
+		map.put("/DiClean/advertiserList.nao", 						"kr.co.nao.command.advertiser.AdvertiserListCommand");
+		map.put("/DiClean/addAdvertiserForm.nao", 			"kr.co.nao.command.advertiser.AddAdvertiserFormCommand");		
+		map.put("/DiClean/addAdvertiser.nao", 						"kr.co.nao.command.advertiser.AddAdvertiserCommand");		
+		map.put("/DiClean/updateAdvertiserForm.nao", 		"kr.co.nao.command.advertiser.UpdateAdvertiserFormCommand");		
+		map.put("/DiClean/updateAdvertiser.nao", 				"kr.co.nao.command.advertiser.UpdateAdvertiserCommand");		
+		map.put("/DiClean/deleteAdvertiser.nao",					"kr.co.nao.command.advertiser.DeleteAdvertiserCommand");
+
+		// --------- 통계 ------------
+		map.put("/DiClean/statisticsListByAdvertiser.nao", 		"kr.co.nao.command.statistics.StatisticsListByAdvertiserCommand");		// 광고주들이 보는 통계
+		map.put("/DiClean/statisticsList.nao", 					"kr.co.nao.command.statistics.StatisticsListCommand"); //이영상 통계 테스트
+		map.put("/DiClean/statisticsJson.nao", 					"kr.co.nao.command.statistics.StatisticsJsonCommand"); //json 데이터추가
+		map.put("/DiClean/statisticsAjax.nao", 					"kr.co.nao.command.statistics.StatisticsAjaxCommand"); //통계 ajax
+		map.put("/DiClean/statisticsSelectADT.nao", 			"kr.co.nao.command.statistics.StatisticsSelectADTCommand"); //광고주 select태그
+		
+	}
+	
+	public static CommandFactory getInstance() {
+		return factory;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Command getCommand(String url) {
+		Command command = null;
+		String pullName = map.get(url);
+		
+		if(pullName != null) {
+			try {
+				Class cls = Class.forName(pullName);
+				command = (Command)cls.newInstance();
+				
+				System.out.println("create Command : " + cls.getName());
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return command;
+	}
+}

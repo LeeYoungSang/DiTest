@@ -1,0 +1,286 @@
+package kr.co.nao.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class MachineDAO extends CommonDAO {
+
+	public ArrayList<Map<String, Object>> getAllMachine(int pageNum, String id, String division) {
+		ArrayList<Map<String, Object>> machineList = new ArrayList<Map<String, Object>>();
+		
+		String sql = 
+			"		select * from tb_machine "
+			+ "	where		isDel = 'N' ";
+		
+		if("01".equals(division)) {
+			sql += " and		partner = ? ";
+		}
+		
+		sql += "	limit			?, 10 ";
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			
+			if("01".equals(division)) {
+				stmt.setString(1, id);
+				stmt.setInt(2, getStartNum(pageNum));
+			
+			} else {
+				stmt.setInt(1, getStartNum(pageNum));
+			}
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, Object> machine = new HashMap<String, Object>();
+				machine.put("machine_num", 		rs.getString("machine_num"));
+				machine.put("install_date", 			rs.getDate("install_date"));
+				machine.put("machine_type",		rs.getString("machine_type"));
+				machine.put("installed_place", 	rs.getString("installed_place"));
+				
+				machineList.add(machine);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(rs);
+			close(stmt);
+			close(con);
+		}
+		
+		return machineList;
+	}
+
+	public boolean addMachine(String machine_num, String machine_type, String installed_place, String partner) {
+		boolean result = false;
+		
+		String sql = 
+			"		insert into tb_machine "
+			+ "	values(?, curdate(), ?, ?, ?, 'N')";
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, machine_num);
+			stmt.setString(2, machine_type);
+			stmt.setString(3, installed_place);
+			stmt.setString(4, partner);
+			
+			int count = stmt.executeUpdate();
+			
+			if(count == 1) {
+				result = true;
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(stmt);
+			
+		}
+		return result;
+	}
+
+	public Map<String, Object> getMachine(String machine_num) {
+		Map<String, Object> machine = null;
+		
+		String sql = 
+			"		select * from tb_machine "
+			+ "	where		machine_num = ? ";
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, machine_num);
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				machine = new HashMap<String, Object>();
+				machine.put("machine_num",			machine_num);
+				machine.put("machine_type", 		rs.getString("machine_type"));
+				machine.put("install_date", 				rs.getDate("install_date"));
+				machine.put("installed_place", 		rs.getString("installed_place"));
+				machine.put("isDel", 						rs.getString("isDel"));
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(rs);
+			close(stmt);
+			close(con);
+		}
+		
+		return machine;
+	}
+
+	public boolean updateMachine(String machine_num, String machine_type, String installed_place) {
+		boolean result = false;
+
+		String sql = 
+			"		update 	tb_machine "
+			+ "	set 			machine_type = ?,  "
+			+ "					installed_place = ? "
+			+ "	where		machine_num = ? ";
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, machine_type);
+			stmt.setString(2, installed_place);
+			stmt.setString(3,  machine_num);
+			
+			int count = stmt.executeUpdate();
+			
+			if(count == 1) {
+				result = true;
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(stmt);
+			close(con);
+		}
+		
+		return result;
+	}
+
+	public boolean deleteMachine(String machine_num) {
+		boolean result = false;
+
+		String sql = 
+			"		update 	tb_machine "
+			+ "	set 			isDel = 'Y' "
+			+ "	where		machine_num = ? ";
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, machine_num);
+			
+			int count = stmt.executeUpdate();
+			
+			if(count == 1) {
+				result = true;
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(stmt);
+			close(con);
+		}
+		
+		return result;
+	}
+	
+	public ArrayList<Map<String, Object>> searchMachine(String id, String division) {
+		ArrayList<Map<String, Object>> machineList = new ArrayList<Map<String, Object>>();
+		
+		String sql = 
+			"		select * from tb_machine "
+			+ "	where		isDel = 'N' ";
+		
+		if("01".equals(division)) {
+			sql += "	and				partner = ? ";
+		}
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			
+			if("01".equals(division)) {
+				stmt.setString(1, id);
+			}
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, Object> machine = new HashMap<String, Object>();
+				machine.put("machine_num", rs.getString("machine_num"));
+				machine.put("install_date", rs.getDate("install_date"));
+				machine.put("machine_type",rs.getString("machine_type"));
+				machine.put("installed_place", rs.getString("installed_place"));
+				
+				machineList.add(machine);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(rs);
+			close(stmt);
+			close(con);
+		}
+		
+		return machineList;
+	}
+
+	public int getTotalRow() {
+		int totalRow = 0;
+		
+		String sql = 
+			"		select count(*) from tb_machine "
+			+ "	where		isDel = 'N' ";
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ds.getConnection();
+			stmt = con.prepareStatement(sql);
+			
+			rs = stmt.executeQuery();
+			rs.next();
+			
+			totalRow = rs.getInt(1);
+				
+		} catch(Exception e) {
+			e.printStackTrace();
+		
+		} finally {
+			close(rs);
+			close(stmt);
+			close(con);
+		}
+		
+		return totalRow;
+	}
+	
+}

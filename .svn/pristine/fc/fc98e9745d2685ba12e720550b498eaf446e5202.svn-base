@@ -1,0 +1,473 @@
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!doctype html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Naosoft</title>
+<link type="text/css" rel="stylesheet" href="common/css/default.css" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
+<script type="text/javascript" src="common/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="common/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="common/js/design.js"></script>
+<!-- <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script> -->
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+	$(document).ready(function()
+	{
+		selectADTSet(); //광고주 select 태그
+		
+// 		google.charts.load('current', {packages : ['line']});
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(dayChart);
+		
+		//일일 통게 그래프
+		function dayChart()
+		{
+			var data = new google.visualization.DataTable();
+			
+			 data.addColumn('number', 'HOUR');
+	         data.addColumn('number', '광고횟수');
+	         
+	         var datas = [];
+	         
+			 $.ajax
+			 ({
+				 type: 'post',
+				 data: { type : 'day'},
+			     url: 'statisticsAjax.nao',
+			     success: function (result) 
+			      {	
+			   	  		
+			   	  		var dataVal1 = JSON.stringify(result);
+			   	  		
+			   	  		var dataVal2 = JSON.parse(result);
+			   	  		console.log("dataVal2.list:"+dataVal2.list);
+			   	  		console.log("dataVal2.length:"+dataVal2.list.length);
+			   	  		
+			   	  		for(var a = 0; a<dataVal2.list.length; a++ )
+			   	  		{
+			   	  			var hour    = 	parseInt(dataVal2.list[a].HOUR);
+			   	  			var ads_cnt = 	dataVal2.list[a].ADS_CNT+0;
+			   	  			
+							console.log("Json배열:"+"["+hour+","+ads_cnt+"]");
+			   	  			datas.push([hour,ads_cnt]);
+			   	  		}
+			   	  		data.addRows(datas);
+			   	  		
+				   	  	 var options = 
+						 {
+				            title : '일일 통계',
+				            curveType: 'function',
+// 				            legend: { position: 'bottom' },
+							 hAxis : 
+							 {
+				                title : '시간',
+// 				                minValue : 1,
+// 				                viewWindow: {
+// 			                        max: 24
+// 			                    }
+				            }
+				            ,
+				            vAxis : {
+				                title : '광고횟수',
+				                minValue : 0
+// 				                viewWindow: {
+// 			                        max: 10
+// 			                    }
+				            }
+				            
+				         };
+// 			 			 var chart = new google.visualization.Histogram(document.getElementById('curve_chart'));
+						 var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+// 						 var chart = new google.charts.Line(document.getElementById('curve_chart'));
+					     chart.draw(data, options);
+				  }, 
+			      error: function (error) 
+			      {
+			         console.log("error: " + JSON.stringify(error));
+			      }
+ 			 });
+		}
+		
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(monthChart);
+		
+		monthChart();
+	 });
+
+	//검색
+	function fn_search(pageNum)
+	{
+		var preDate = document.getElementById("test1");
+		var postDate = document.getElementById("test2");
+		
+		location.href = "statisticsList.nao?test1="+preDate.value+"&test2="+postDate.value;		
+	}
+	
+	
+	//월별차트 그래프
+	function monthChart()
+	{
+		var data = new google.visualization.DataTable();
+		
+		 data.addColumn('number', 'MONTH');
+         data.addColumn('number', '광고횟수');
+         
+         var datas = [];
+         
+		 $.ajax
+		 ({
+			 type: 'post',
+			 data: { type : 'month'},
+		     url: 'statisticsAjax.nao',
+		     success: function (result) 
+		      {	
+		   	  		var dataVal2 = JSON.parse(result);
+		   	  		console.log("dataVal2.list:"+dataVal2.list);
+		   	  		console.log("dataVal2.length:"+dataVal2.list.length);
+		   	  		
+		   	  		for(var a = 0; a<dataVal2.list.length; a++ )
+		   	  		{
+		   	  			var month    = 	parseInt(dataVal2.list[a].MONTH);
+		   	  			var ads_sum  = 	dataVal2.list[a].ADS_SUM+0;
+		   	  			
+						console.log("Json배열:"+"["+month+","+ads_sum+"]");
+		   	  			datas.push([month,ads_sum]);
+		   	  		}
+		   	  		data.addRows(datas);
+		   	  		
+			   	  	 var options = 
+					 {
+			            title : '월별 통계',
+			            curveType: 'function',
+						 hAxis : 
+						{
+			                title : '월',
+				            minValue : 1,
+			                viewWindow: 
+			                {
+		                        max: 12
+		                    }
+			            }
+			            ,
+			            vAxis : 
+			            {
+			                title : '광고횟수',
+			                minValue : 0
+			            }
+			            
+			         };
+//			 			 var chart = new google.visualization.Histogram(document.getElementById('curve_chart'));
+					 var chart = new google.visualization.LineChart(document.getElementById('curve_chart2'));
+//						 var chart = new google.charts.Line(document.getElementById('curve_chart'));
+				     chart.draw(data, options);
+			  }, 
+		      error: function (error) 
+		      {
+		         console.log("error: " + JSON.stringify(error));
+		      }
+			 });
+	}
+	
+	//광고주 select 세팅
+	function selectADTSet()
+	{
+		$.ajax
+		 ({
+			 type: 'post',
+		     url: 'statisticsSelectADT.nao',
+		     success: function (result) 
+		      {	
+		    	 var dataVal = JSON.parse(result);
+		    	 
+// 		    	 console.log("selectADTSet:"+result);
+// 		    	 console.log("selectADTSet2:"+dataVal);
+// 		    	 console.log("dataVal.adtList.length:"+dataVal.adtList.length);
+		    	 
+		    	 $("#selADT").empty();
+		    	 var html = "";
+		    	 html += "<select>";
+				 html += "<option value=''>전체</option>";
+		    	 for(var i = 0; i<dataVal.adtList.length; i++  )
+				 {
+		    	 	html += "<option value="+dataVal.adtList[i].ADT_NUM+">"+dataVal.adtList[i].ADT_NM+"</option>";
+				 }
+				 html += "</select>";
+				 $("#selADT").html(html); 
+		    	 
+		      },
+		      error: function (error) 
+		      {
+		    	  
+		    	  
+		         console.log("error: " + JSON.stringify(error));
+		      }
+	 });
+	}
+	
+	//광고종류 select 세팅
+	function selectADKSet()
+	{
+		
+	}
+	
+	//Machine select 세팅
+	function selectMacSet()
+	{
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+</script>
+</head>
+
+<body>
+
+
+<!-- 스킵 네비게이션 -->
+<div class="skip_navi">
+    <a href="#contents">본문으로 가기</a>
+    <a href="#gnb">주메뉴로 가기</a>
+    <a href="#footer">카피라이트로 가기</a>
+</div>
+<!-- // 스킵 네비게이션 -->
+
+<!-- wrapper -->
+<div class="wrapper group">
+
+	<%@ include file="../common/header.jsp" %>
+  
+    <!-- search area -->
+    <div class="top_serch">
+      <div class="search_w">
+        <div class="box">
+          <table class="tb tb_row">
+            <caption>검색</caption>
+            <colgroup>
+              <col width="20%">
+              <col width="40%">
+              <col width="40%">
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>통계 검색창</th>
+                <td>
+                	<table>
+                		<tr>
+                			<th>통계종류</th>
+							<td>
+								<select style="width: 200px;">
+									<option value="">선택해주세요.</option>
+									<option value="">일별</option>
+									<option value="">월별</option>
+									<option value="">기간별</option>
+								</select>
+							</td>
+							<th>시작일자</th>
+							<td>
+<!-- 								<select style="width: 200px;"> -->
+<!-- 									<option value="">없음</option> -->
+<!-- 								</select> -->
+								 <input id="test1" name="test1" class="date" readonly="readonly" value="<%=request.getAttribute("preDate")%>" />
+							</td> 
+							<th>종료일자</th>
+							<td>
+<!-- 								<select style="width: 200px;"> -->
+<!-- 									<option value="">없음</option> -->
+<!-- 								</select> -->
+								  <input id="test2" name="test2" class="date" readonly="readonly" value="<%=request.getAttribute("postDate")%>" />
+							</td>
+                		</tr>
+                		<tr>
+                			<th>광고주</th>
+							<td id="selADT">
+								<select style="width: 200px;">
+									<option value="">없음</option>
+								</select>
+							</td>
+                			<th>광고종류</th>
+							<td>
+								<select style="width: 200px;">
+									<option value="">없음</option>
+								</select>
+							</td> 
+							<th>Machine</th>
+							 <td>
+								<select style="width: 200px;">
+									<option value="">없음</option>
+								</select>
+							</td>
+                		</tr>
+                	</table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="btn_w" style="position: static;">
+            <div class="w">
+              <a href="javascript:fn_search(1);" class="btn btn_sch"><span>검색</span></a>
+<!--               <a href="statisticsJson.nao" class="btn btn_white"><span>JSON파일등록</span></a> -->
+<!--               <a href="addAdvertiserForm.nao" class="btn btn_white"><span>광고주 등록</span></a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--// search area -->
+    
+<%
+	ArrayList<Map<String, Object>> stList = (ArrayList<Map<String, Object>>)request.getAttribute("stList");
+%>
+    
+    <!-- contents -->
+    <div id="contents" class="contents">  
+      
+      <!-- article --> 
+      <div class="article">
+                
+        <div class="cnt"> 
+          <h3>통계 내역</h3>     
+          
+          <div id="curve_chart" style="width: 900px; height: 500px"></div>
+          <div id="curve_chart2" style="width: 900px; height: 500px"></div>
+          
+          <div class="t_w">
+            <table class="tb tb_col tb_result">
+              <caption>통계 내역</caption>
+              <colgroup>
+                <col width="12%">
+                <col width="*">
+                <col width="12%">
+                <col width="12%">
+                <col width="12%">
+           	 </colgroup>                
+              <thead>
+              <tr>
+                <th>광고주</th>
+                <th>날짜</th>
+                <th>시간</th>
+                <th>광고횟수</th>
+                <th>Special 여부</th>
+              </tr>
+              </thead>
+              <tbody>
+<%
+	if(stList != null && stList.size() > 0) {
+		for(int i = 0; i < stList.size(); i++) {
+			Map<String, Object> st = stList.get(i);
+%>
+              <tr>
+<!--               
+                <td class="td_ch">
+                  <label for="ch_01" class="ch">
+                    <input type="checkbox" name="sd1" id="ch_01"><span></span>
+                  </label>
+                </td>
+ -->
+                <td><%= st.get("ADT_NM") %></td>
+                <td><%= st.get("DAY") %></td>
+                <td><%= st.get("HOUR") %></td>
+                <td><%= st.get("ADS_CNT") %></td>
+                <td><%= st.get("SP_YN") %></td>
+<%--                 <td><a href="updateAdvertiserForm.nao?advertiser_num=<%= st.get("advertiser_num") %>"><%= st.get("advertiser_name") %></a></td> --%>
+              </tr>
+ <%
+		}
+	
+	} else {
+%> 
+              <tr>
+				<th colspan="5">등록된 파일이 없습니다.</th>
+			  </tr>
+<%		
+	}
+%>				  
+              </tbody>
+            </table>
+<!--             
+            <div class="btm_btn_l">
+              <a href="#" class="btn btn_white"><span>선택 그룹 삭제</span></a>
+            </div>
+ -->       
+ <%
+/* 	int totalRow = (Integer)request.getAttribute("totalRow");
+	int pn = (Integer)request.getAttribute("pn");
+	
+	int startPage = (((pn - 1) / 10) * 10) + 1;
+	int totalPage = ((totalRow - 1) / 10) + 1; */
+%>           
+            <div class="paging">
+<%
+//	if(startPage > 1) {
+%>                  
+              <a href="fileList.nao?pn=1" class="pagn_btn page_first">처음</a>
+              <a href="fileList.nao?pn=<%//= startPage - 1 %>" class="pagn_btn page_before">이전</a>
+<%
+/* 	}
+
+	for(int i = startPage; i < startPage + 10; i++) {
+		if(i > totalPage ) {
+			break;
+		}
+		
+		if(i == pn) {
+ */%>              
+              <a href="fileList.nao?pn=<%//= i %>" class="ac"><span><%//= i %></span></a>
+<%			
+//		} else {
+%>              
+              <a href="fileList.nao?pn=<%//= i %>"><span><%//= i %></span></a>
+<%			
+/* 		}
+	}
+	
+	if(startPage + 10 <= totalPage) {
+ */%>                   
+              <a href="fileList.nao?pn=<%//= startPage + 10 %>" class="pagn_btn page_next">다음</a>
+              <a href="fileList.nao?pn=<%//= totalPage %>" class="pagn_btn page_last">마지막</a>
+<%
+//	}
+%>               
+            </div>
+
+          </div>
+          
+        </div>
+        
+      </div>
+      <!--// article --> 
+    
+    	   
+    </div>
+    <!--// contents -->
+    
+  <!-- footer -->
+  <div id="footer" class="footer" > 
+    <p class="c">Copyright ⓒ. All rights reserved.</p>
+
+  </div>
+  <!--// footer -->   
+
+</div>
+<!--// wrapper -->
+
+</body>
+</html>

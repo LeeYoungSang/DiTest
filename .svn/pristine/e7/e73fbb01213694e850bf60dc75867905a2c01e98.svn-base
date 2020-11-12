@@ -1,0 +1,116 @@
+package kr.co.nao.command.statistics;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.json.simple.JSONObject;
+
+import kr.co.nao.common.ActionForward;
+import kr.co.nao.common.Command;
+import kr.co.nao.dao.AdvertiserDAO;
+import kr.co.nao.dao.StatisticsDAO;
+
+/**
+ * 통계 목록
+ * 
+ * @author	이영상
+ * @since		2020.08.19
+ * @version	1.0
+ * 
+ * <pre>
+ * << 개정이력 >>
+ * ------------------------------------------------------
+ * 수정일				수정자				수정내용
+ * ------------------------------------------------------
+ * 08.19			이영상				최초생성
+ */
+
+
+
+
+public class StatisticsAjaxCommand implements Command 
+{
+
+	@Override
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) 
+	{
+		response.setContentType("text/html;charset=utf-8");
+		
+		HttpSession session = request.getSession();
+		Map<String, Object> member = (Map<String, Object>)session.getAttribute("member");
+		
+		ActionForward action = new ActionForward();
+
+		String type ="";
+		ArrayList<Map<String, Object>> stList = null;
+		JSONObject json = new JSONObject();
+		
+		
+		if(member == null) 
+		{
+			action.setRedirect(true);
+			action.setPath("loginForm.nao");
+		}
+		else 
+		{
+			StatisticsDAO dao = new StatisticsDAO();
+			
+			type = request.getParameter("type");
+			
+			System.out.println("request.getParameter(type):"+request.getParameter("type"));
+			System.out.println("type:"+type);
+			
+			//통계리스트
+			
+			//일일통계리스트
+			if("day".equals(type)) 
+			{
+				stList = dao.getStatisticsTestList((String)member.get("id"));
+				System.out.println("StatisticsAjaxCommand:일일통계리스트 호출");
+				
+//				json  = dao.getStatisticsDayListJson((String)member.get("id"));
+				
+			}
+			
+			//월별통계리스트
+			if("month".equals(type))
+			{
+				stList = dao.getStatisticsMonthList((String)member.get("id"));
+				System.out.println("StatisticsAjaxCommand:월별통계리스트 호출");
+			}
+			
+			if("period".equals(type)) {
+				
+				System.out.println("StatisticsAjaxCommand:기간별별통계리스트 호출");
+			}
+			
+			JSONObject jsonObject = new JSONObject();
+			
+			try 
+			{
+				PrintWriter pw = response.getWriter();
+				
+				jsonObject.put("list", stList);
+				
+				pw.print(jsonObject);
+				pw.flush();
+				pw.close();
+			
+			}
+			catch(Exception e) 
+			{
+				e.printStackTrace();
+			}
+			
+			action.setRedirect(true);
+			action.setPath("WEB-INF/statistics/statisticsTestList.jsp");
+		}
+		
+		return action;
+	}
+}

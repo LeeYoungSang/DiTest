@@ -1,0 +1,82 @@
+package kr.co.nao.command.machine;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import kr.co.nao.common.ActionForward;
+import kr.co.nao.common.Command;
+import kr.co.nao.dao.MachineDAO;
+
+/**
+ * 머신 등록
+ * 
+ * @author	김관형
+ * @since		2019.11.18
+ * @version	1.0
+ * 
+ * <pre>
+ * << 개정이력 >>
+ * ------------------------------------------------------
+ * 수정일				수정자				수정내용
+ * ------------------------------------------------------
+ */
+
+public class AddMachineCommand implements Command {
+
+	@Override
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		Map<String, Object> member = (Map<String, Object>)session.getAttribute("member");
+		
+		ActionForward action = new ActionForward();
+
+		if(member == null) {
+			action.setRedirect(true);
+			action.setPath("loginForm.nao");
+
+		} else {
+			
+			try {
+				request.setCharacterEncoding("UTF-8");
+
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			
+			String machine_num = request.getParameter("machine_num");
+			String machine_type = request.getParameter("machine_type");
+			String installed_place = request.getParameter("installed_place");
+			String partner = request.getParameter("partner");
+			String location_x = request.getParameter("x");
+			String location_y = request.getParameter("y");
+			
+			System.out.println("머신번호" + machine_num);
+			System.out.println("머신타입" + machine_type);
+			System.out.println("머신장소" + installed_place);
+			System.out.println("파트너" + partner);
+			System.out.println("x죄표" + location_x);
+			System.out.println("y좌표" + location_y);
+			
+
+			MachineDAO dao = new MachineDAO();
+			boolean result = dao.addMachine(machine_num, machine_type, installed_place, partner, location_x,location_y);
+			
+			if(result) {
+				action.setRedirect(true);
+				action.setPath("machineList.nao");
+			
+			} else {
+				action.setRedirect(false);
+				action.setPath("WEB-INF/machine/machineResult.jsp?error=1");
+			}
+			
+		}
+		
+		return action;
+	}
+}
