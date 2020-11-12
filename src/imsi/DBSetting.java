@@ -18,7 +18,7 @@ public class DBSetting {
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://kh0917.cafe24.com:3306/kh0917?characterEncoding=UTF-8", "kh0917", "parThree!");
+			con = DriverManager.getConnection("");
 			stmt = con.prepareStatement(sql);
 			boolean isFirst = true;
 			
