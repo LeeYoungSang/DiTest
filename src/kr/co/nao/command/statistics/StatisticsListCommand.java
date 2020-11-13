@@ -221,9 +221,10 @@ public class StatisticsListCommand implements Command {
 				stList = dao.getStatisticsPeriodMList(paramList);
 			}
 			
+			//commit 테스트
 			
 			// 게시물의 총 갯수
-//			int totalRow = dao.getTotalRow();
+			//int totalRow = dao.getTotalRow();
 			int totalRow = 25;
 			
 			//select 태그세팅
