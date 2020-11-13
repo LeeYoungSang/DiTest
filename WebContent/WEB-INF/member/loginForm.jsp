@@ -26,6 +26,10 @@
 	function addMember() {
 		location.href = "addMemberForm.nao";
 	}
+	
+	function commitTest(){
+		
+	}
 </script>
 </head>
 
